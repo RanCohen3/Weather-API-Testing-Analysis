@@ -14,7 +14,6 @@ def test_weather_data(page, *args, **kwargs):
     threshold = int(os.environ.get("THRESHOLD"))
     print(f"threshold is {threshold}")
     print(f"my api is {api_key}")
-    # api_key = "859b919dbc2542166e6a9ed88f7c72a8"
 
     # scraping data
     home = HomePage(page)
