@@ -6,29 +6,35 @@ from playwright.sync_api import Page
 
 class WeatherPage(BasePage):
     """
-    Page object for the Airbnb listing details page
+    Page object for the timeanddate.com weather page.
     """
+    
     def __init__(self, page: Page):
+        """
+        Initialize the WeatherPage.
+        :param page: Playwright page object.
+        """
         super().__init__(page)
 
     def get_cities_table(self):
         """
-        This method returns the table object of the cities
-        :return:
+        Get the table element containing city information.
         """
-        return self.page.get_by_role("table")
+        return self.page.get_by_role('table')
 
     def get_cities(self, table):
         """
-        This method return the cities objects
-        :param table: Table object from weather page
+        Get all city elements from the table.
+        :param table: Locator for the cities table
         """
-        return table.locator("a")
+        return table.locator('a')
 
     def get_random_cities(self, cities):
         """
-        This method gets 20 random cities.
-        :param cities:
+        Select random cities from the available list.
+        Filters out cities that are not available in the OpenWeatherMap API
+        and returns a random selection of cities for weather comparison.
+        :param cities: Locator containing all city elements
         """
         cities_texts = enumerate(cities.all_inner_texts())
 
@@ -43,25 +49,24 @@ class WeatherPage(BasePage):
         for city, index in city_dict.items():
             if city not in excluded_cities:
                 filtered_city_dict[city] = index
-        # TODO should be 20
-        # return random.sample(list(filtered_city_dict.items()), 20)
-        return random.sample(list(filtered_city_dict.items()), 5)
+
+        return random.sample(list(filtered_city_dict.items()), 20)
 
     def get_cities_elements(self, table, city_index_pairs):
         """
-        This method goes over the random 20 city:index pairs, and returns the city with its locator.
-        :param table: Table element from weather page
-        :param city_index_pairs: random 20 pairs of city:index
+        Get Playwright locators for selected cities.
+        :param table: Locator for the cities table
+        :param city_index_pairs: List of (city_name, index) tuples
         """
         city_locator_dict = {}
         for city, index in city_index_pairs:
-            city_locator_dict[city] = table.locator("a").nth(index)
+            city_locator_dict[city] = table.locator('a').nth(index)
 
         return city_locator_dict
 
     def click_on_city(self, city_locator):
         """
-        Click on city
-        :param city_locator: locator
+        Navigate to a specific city's weather page.
+        :param city_locator: Locator for the city element
         """
         city_locator.click()
