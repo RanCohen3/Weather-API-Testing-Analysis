@@ -12,8 +12,8 @@ storing and analyzing the data to generate CSV report.
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd Weather-API-Testing-Analysis/pangoHomeTask
+git clone git@github.com:RanCohen3/weather-api-testing-analysis.git
+cd weather-api-testing-analysis
 ```
 
 2. Install dependencies:
