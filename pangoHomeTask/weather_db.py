@@ -1,4 +1,5 @@
 import logging
+import os
 import sqlite3
 
 logger = logging.getLogger(__name__)
@@ -14,6 +15,7 @@ class WeatherDataBase:
         """
         try:
             logger.info("Trying to connect to DB")
+            os.makedirs("db", exist_ok=True)
             self.conn = sqlite3.connect("db/weather_data.db")
         except sqlite3.Error as e:
             logger.error(f"Database connection error: {e}")
@@ -22,6 +24,7 @@ class WeatherDataBase:
         """
         Closing the connection to the DB.
         """
+        logger.info("Closing the connection to the DB")
         self.conn.close()
 
     def create_table(self):
@@ -29,6 +32,7 @@ class WeatherDataBase:
         Create a table for the DB in case it does not exist.
         :return:
         """
+        logger.info("Creating a table")
         self.reset_weather_table()
 
         cursor = self.conn.cursor()
@@ -45,7 +49,7 @@ class WeatherDataBase:
         """)
 
         res = cursor.execute("SELECT name FROM sqlite_master")
-        if not res.fetchone(): # If the table doesn't exist it will return None
+        if not res.fetchone():
             raise sqlite3.Error("Could not create the table")
 
     def insert_weather_data(self, city_name, temperature_web, feels_like_web,
@@ -58,7 +62,6 @@ class WeatherDataBase:
         :param temperature_api: Temperature from API
         :param feels_like_api: "Feels like" temperature from API
         """
-        # TODO add try-except
         cursor = self.conn.cursor()
         cursor.execute("""
             INSERT INTO weather_data (
@@ -74,9 +77,10 @@ class WeatherDataBase:
 
     def get_cities_where_diff_larger_than_threshold(self, threshold):
         """
-        Get all cities where the difference b
+        Get all cities where the difference larger than threshold
         :param threshold:
         """
+        logger.info(f"Getting cities where threshold is larger than {threshold}")
         cursor = self.conn.cursor()
         query = '''
             SELECT 
@@ -97,6 +101,10 @@ class WeatherDataBase:
         return cities_with_large_diff
 
     def get_summary_statistics(self):
+        """
+        Calculate and return summary statistics for the temperature differences stored in the DB.
+        """
+        logger.info("Getting summary statistics")
         cursor = self.conn.cursor()
         cursor.execute("""
             SELECT 

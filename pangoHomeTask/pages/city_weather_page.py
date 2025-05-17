@@ -1,14 +1,15 @@
+import logging
 import re
 
 from .base_page import BasePage
 from playwright.sync_api import Page
-import logging
+
+logger = logging.getLogger(__name__)
 
 
 class CityWeatherPage(BasePage):
     def __init__(self, page: Page):
         super().__init__(page)
-        self.logger = logging.getLogger(__name__)
 
     def get_city_weather(self, city):
         def extract_feels_like_number(p_element_with_feels_like):
@@ -37,7 +38,7 @@ class CityWeatherPage(BasePage):
                 temp = None
             return temp
 
-        logging.info(f"Extracting {city}'s weather from web")
+        logger.info(f"Extracting {city}'s weather from web")
         city_dict = {}
         container = self.page.locator("#qlook")
         city_dict["web_temp"] = extract_now_temperature(container)

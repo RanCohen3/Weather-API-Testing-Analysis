@@ -1,11 +1,12 @@
 import logging
 from playwright.sync_api import Page
 
+logger = logging.getLogger(__name__)
+
 
 class BasePage:
     def __init__(self, page: Page):
         self.page = page
-        self.logger = logging.getLogger(__name__)
 
     def open_page(self, url):
         """

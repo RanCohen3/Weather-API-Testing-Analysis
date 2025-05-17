@@ -1,6 +1,8 @@
 import math
+import os
 
 import pandas as pd
+import requests
 
 
 def kelvin_to_celsius(kelvin):
@@ -38,7 +40,25 @@ def report_generator(cities_with_large_diff, mean, max_val, min_val):
     data_df = pd.DataFrame(cities_data_dict)
     summary_stats_df = pd.DataFrame([summary_dict])
 
-    with open("weather_info.csv", "w", encoding="utf-8") as f:
+    os.makedirs("reports", exist_ok=True)
+    with open("reports/weather_info.csv", "w", encoding="utf-8") as f:
         data_df.to_csv(f, index=False)
         f.write("\n\nSummary statistics\n")
         summary_stats_df.to_csv(f, index=False)
+
+
+def get_weather_via_api(url):
+    """
+    This function GET weather data via API request.
+    :param url: URL.
+    """
+    response = requests.get(url)
+    response.raise_for_status()
+    main_data = response.json()["main"]
+    api_temperature = main_data["temp"]
+    api_feels_like_temp = main_data["feels_like"]
+
+    api_temperature_celsius = kelvin_to_celsius(api_temperature)
+    api_feels_like_temp_celsius = kelvin_to_celsius(api_feels_like_temp)
+
+    return api_temperature_celsius, api_feels_like_temp_celsius

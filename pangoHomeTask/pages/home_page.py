@@ -2,6 +2,8 @@ import logging
 
 from pages.base_page import BasePage
 
+logger = logging.getLogger(__name__)
+
 
 class HomePage(BasePage):
     URL = "https://www.timeanddate.com/"
@@ -9,7 +11,6 @@ class HomePage(BasePage):
 
     def __init__(self, page):
         super().__init__(page)
-        self.logger = logging.getLogger(__name__)
 
     def goto_home(self):
         """

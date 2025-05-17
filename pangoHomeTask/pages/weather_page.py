@@ -2,9 +2,6 @@ import random
 
 from .base_page import BasePage
 from playwright.sync_api import Page
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 class WeatherPage(BasePage):
@@ -13,7 +10,6 @@ class WeatherPage(BasePage):
     """
     def __init__(self, page: Page):
         super().__init__(page)
-        # self.logger = logging.getLogger(__name__)
 
     def get_cities_table(self):
         """
@@ -47,8 +43,6 @@ class WeatherPage(BasePage):
         for city, index in city_dict.items():
             if city not in excluded_cities:
                 filtered_city_dict[city] = index
-            else:
-                print("delete")
         # TODO should be 20
         # return random.sample(list(filtered_city_dict.items()), 20)
         return random.sample(list(filtered_city_dict.items()), 5)
@@ -63,7 +57,6 @@ class WeatherPage(BasePage):
         for city, index in city_index_pairs:
             city_locator_dict[city] = table.locator("a").nth(index)
 
-        # return {city: table.locator("a").nth(index) for city, index in city_index_pairs}
         return city_locator_dict
 
     def click_on_city(self, city_locator):
